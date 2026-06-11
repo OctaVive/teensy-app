@@ -55,6 +55,44 @@
     @apply dark:bg-ziggo/15 dark:text-ziggo-100 dark:border-ziggo/30;
   }
 
+  .vz-row-sla-risk {
+    @apply bg-vodafone-50/70 dark:bg-vodafone/10 border-l-4 border-l-vodafone;
+  }
+
+  .vz-row-sla-risk-highlight {
+    @apply bg-vodafone-100/90 dark:bg-vodafone/20 border-l-4 border-l-vodafone;
+    @apply ring-1 ring-inset ring-vodafone/25 dark:ring-vodafone/30;
+  }
+
+  .vz-row-sla-risk-muted {
+    @apply border-t border-gray-100 dark:border-neutral-800;
+    @apply bg-vodafone-50/30 dark:bg-vodafone/5;
+  }
+
+  .vz-row-changed-upload {
+    @apply bg-ziggo-50 dark:bg-ziggo/15 border-l-4 border-l-ziggo;
+    @apply ring-2 ring-inset ring-ziggo/35 dark:ring-ziggo/40;
+  }
+
+  .vz-row-changed-upload-sla {
+    @apply border-l-4 border-l-ziggo;
+    @apply bg-gradient-to-r from-ziggo-50 via-ziggo-50/80 to-vodafone-50;
+    @apply dark:from-ziggo/20 dark:via-ziggo/10 dark:to-vodafone/15;
+    @apply ring-2 ring-inset ring-vodafone/30 dark:ring-vodafone/40;
+  }
+
+  .vz-cell-sla-overdue {
+    @apply font-semibold text-vodafone dark:text-vodafone-100;
+  }
+
+  .vz-cell-changed-date {
+    @apply font-semibold text-ziggo-800 dark:text-ziggo-100;
+  }
+
+  .vz-cell-previous-date {
+    @apply text-gray-400 line-through decoration-ziggo/60;
+  }
+
   .vz-page-title {
     @apply text-2xl font-bold text-gray-900 dark:text-white;
   }

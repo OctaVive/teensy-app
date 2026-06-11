@@ -106,6 +106,7 @@ async def build_dashboard(session: AsyncSession) -> DashboardResponse:
 
         previous_gepland = change.previous_gepland if change else None
         days_shifted = change.days_shifted if change else None
+        changed_this_upload = days_shifted is not None
 
         detail = OrderDetail(
             order_number=order.order_number,
@@ -118,6 +119,7 @@ async def build_dashboard(session: AsyncSession) -> DashboardResponse:
             sla_days_over=days_over if at_risk else None,
             is_sla_risk=at_risk,
             is_new_order=change.is_new_order if change else False,
+            is_changed_this_upload=changed_this_upload,
         )
         by_bedrijf.setdefault(order.bedrijf, []).append(detail)
 
@@ -125,17 +127,25 @@ async def build_dashboard(session: AsyncSession) -> DashboardResponse:
     for bedrijf, orders in sorted(by_bedrijf.items()):
         has_sla_risk = any(o.is_sla_risk for o in orders)
         has_change = any(o.is_new_order or o.days_shifted is not None for o in orders)
+        has_changed_this_upload = any(o.is_changed_this_upload for o in orders)
         customers.append(
             CustomerCard(
                 bedrijf=bedrijf,
                 has_change=has_change or latest.is_first_upload,
                 has_sla_risk=has_sla_risk,
+                has_changed_this_upload=has_changed_this_upload,
                 order_count=len(orders),
                 orders=orders,
             )
         )
 
-    customers.sort(key=lambda c: (not c.has_sla_risk, c.bedrijf))
+    customers.sort(
+        key=lambda c: (
+            not c.has_changed_this_upload,
+            not c.has_sla_risk,
+            c.bedrijf,
+        )
+    )
 
     return DashboardResponse(
         last_upload=ReportUploadResponse.model_validate(latest),

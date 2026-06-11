@@ -56,12 +56,14 @@ class OrderDetail(BaseModel):
     sla_days_over: int | None = None
     is_sla_risk: bool
     is_new_order: bool
+    is_changed_this_upload: bool = False
 
 
 class CustomerCard(BaseModel):
     bedrijf: str
     has_change: bool
     has_sla_risk: bool
+    has_changed_this_upload: bool = False
     order_count: int
     orders: list[OrderDetail]
 

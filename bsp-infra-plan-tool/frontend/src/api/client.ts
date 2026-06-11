@@ -35,12 +35,14 @@ export interface OrderDetail {
   sla_days_over: number | null;
   is_sla_risk: boolean;
   is_new_order: boolean;
+  is_changed_this_upload: boolean;
 }
 
 export interface CustomerCard {
   bedrijf: string;
   has_change: boolean;
   has_sla_risk: boolean;
+  has_changed_this_upload: boolean;
   order_count: number;
   orders: OrderDetail[];
 }
@@ -146,6 +148,27 @@ export function formatSlaRiskLabel(daysOver: number | null | undefined): string 
   return `SLA-risico (+${daysOver} ${unit})`;
 }
 
+export function dashboardRowClass(order: {
+  is_sla_risk: boolean;
+  days_shifted: number | null;
+  is_changed_this_upload?: boolean;
+}): string {
+  const changed = order.is_changed_this_upload ?? order.days_shifted != null;
+  if (changed && order.is_sla_risk) {
+    return "vz-row-changed-upload-sla";
+  }
+  if (changed) {
+    return "vz-row-changed-upload";
+  }
+  if (order.is_sla_risk) {
+    return "vz-row-sla-risk-muted";
+  }
+  return "border-t border-gray-100 dark:border-neutral-800";
+}
+
+/** @deprecated use dashboardRowClass */
+export const slaRowClass = dashboardRowClass;
+
 export type SlaDaysSort = "default" | "asc" | "desc";
 
 export function maxSlaDaysOver(
@@ -159,9 +182,16 @@ export function sortCustomersBySlaDays<T extends CustomerCard>(
   customers: T[],
   sort: SlaDaysSort
 ): T[] {
-  if (sort === "default") return customers;
-
-  return [...customers].sort((a, b) => {
+  const sorted = [...customers].sort((a, b) => {
+    if (a.has_changed_this_upload !== b.has_changed_this_upload) {
+      return a.has_changed_this_upload ? -1 : 1;
+    }
+    if (sort === "default") {
+      if (a.has_sla_risk !== b.has_sla_risk) {
+        return a.has_sla_risk ? -1 : 1;
+      }
+      return a.bedrijf.localeCompare(b.bedrijf, "nl");
+    }
     const aDays = maxSlaDaysOver(a.orders);
     const bDays = maxSlaDaysOver(b.orders);
     if (aDays === 0 && bDays === 0) return a.bedrijf.localeCompare(b.bedrijf, "nl");
@@ -169,4 +199,5 @@ export function sortCustomersBySlaDays<T extends CustomerCard>(
     if (bDays === 0) return -1;
     return sort === "asc" ? aDays - bDays : bDays - aDays;
   });
+  return sorted;
 }

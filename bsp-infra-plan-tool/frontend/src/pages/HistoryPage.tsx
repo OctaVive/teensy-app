@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { api, formatDate, formatDateTime, formatSlaRiskLabel, type SlaDaysSort } from "@/api/client";
+import { api, dashboardRowClass, formatDate, formatDateTime, formatSlaRiskLabel, type SlaDaysSort } from "@/api/client";
 import SlaDaysSortButtons from "@/components/SlaDaysSortButtons";
 
 export default function HistoryPage() {
@@ -115,14 +115,18 @@ export default function HistoryPage() {
             </thead>
             <tbody>
               {data.items.map((c) => (
-                <tr key={c.id} className="border-t border-gray-100 dark:border-neutral-800">
+                <tr key={c.id} className={dashboardRowClass({ ...c, is_changed_this_upload: c.days_shifted != null })}>
                   <td className="px-4 py-3 whitespace-nowrap">{formatDateTime(c.created_at)}</td>
                   <td className="px-4 py-3">{c.bedrijf}</td>
                   <td className="px-4 py-3 font-mono text-xs">{c.order_number}</td>
                   <td className="px-4 py-3 capitalize">{c.line_type}</td>
                   <td className="px-4 py-3">{formatDate(c.previous_gepland)}</td>
-                  <td className="px-4 py-3">{formatDate(c.new_gepland)}</td>
-                  <td className="px-4 py-3">{formatDate(c.sla_deadline)}</td>
+                  <td className={`px-4 py-3 ${c.is_sla_risk ? "vz-cell-sla-overdue" : ""}`}>
+                    {formatDate(c.new_gepland)}
+                  </td>
+                  <td className={`px-4 py-3 ${c.is_sla_risk ? "font-medium" : ""}`}>
+                    {formatDate(c.sla_deadline)}
+                  </td>
                   <td className="px-4 py-3">
                     {c.is_sla_risk ? (
                       <span className="vz-badge-sla">
