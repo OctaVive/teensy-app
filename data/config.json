@@ -1,0 +1,49 @@
+{
+  "configVersion": 1,
+  "mode": "pixel",
+  "sacn": {
+    "startUniverse": 1,
+    "universeCount": 18,
+    "effectUniverse": 100,
+    "virtualAllUniverse": 101,
+    "priority": 100,
+    "multicast": true,
+    "ip": "192.168.1.177",
+    "subnet": "255.255.255.0",
+    "gateway": "192.168.1.1"
+  },
+  "leds": {
+    "strips": [
+      { "pin": 2, "ledCount": 300, "serpentine": false },
+      { "pin": 3, "ledCount": 300, "serpentine": false },
+      { "pin": 4, "ledCount": 300, "serpentine": false },
+      { "pin": 5, "ledCount": 300, "serpentine": false },
+      { "pin": 6, "ledCount": 300, "serpentine": false },
+      { "pin": 9, "ledCount": 300, "serpentine": false },
+      { "pin": 10, "ledCount": 300, "serpentine": false },
+      { "pin": 11, "ledCount": 300, "serpentine": false },
+      { "pin": 12, "ledCount": 300, "serpentine": false },
+      { "pin": 16, "ledCount": 300, "serpentine": false }
+    ]
+  },
+  "dmx": {
+    "ports": [
+      { "direction": "input", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "input", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "output", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "output", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "input", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "input", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "output", "outputRefreshHz": 44, "inputTimeoutMs": 500 },
+      { "direction": "output", "outputRefreshHz": 44, "inputTimeoutMs": 500 }
+    ]
+  },
+  "effectGroups": [
+    {
+      "name": "VirtualAll",
+      "type": "virtualAll",
+      "stripMask": 1023,
+      "sacnChannelOffset": 0
+    }
+  ]
+}
